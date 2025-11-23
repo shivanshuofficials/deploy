@@ -1,5 +1,5 @@
 // Client-side chat widget using Socket.IO
-import { getAuthToken, getCurrentUser } from './auth.js';
+import { getAuthToken, getCurrentUser } from './js/auth.js';
 
 // Configuration
 const SOCKET_URL = window.location.origin;

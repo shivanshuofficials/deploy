@@ -42,8 +42,6 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -212,6 +210,7 @@ app.use('/api/*', (req, res) => {
 
 // Serve index.html for all other routes (SPA support)
 app.get('*', (req, res) => {
+    console.log(`⚠️ 404 Fallback for: ${req.originalUrl}`);
     res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 

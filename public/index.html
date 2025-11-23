@@ -512,7 +512,7 @@
                 }
 
                 grid.innerHTML = response.products.map(product => `
-                    <div class="card" data-id="${product.id}">
+                    <div class="card" data-id="${product._id || product.id}">
                         <div class="img-frame">
                             <div class="img-box">
                                 <img src="${product.image_url || 'https://via.placeholder.com/300'}" alt="${product.title}">
