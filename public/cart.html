@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - UniMart</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDF6F0;
+            --soft-pink: #FFC3C3;
+            --mint-green: #C1E1C1;
+            --baby-blue: #A2D2FF;
+            --text-dark: #5D576B;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--baby-blue);
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            color: #FF92A4;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: var(--white);
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .item-price {
+            color: #FF7A9A;
+            font-weight: 700;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .qty-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .remove-btn {
+            color: #ff6b6b;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-left: 15px;
+        }
+
+        .remove-btn:hover {
+            text-decoration: underline;
+        }
+
+        .total-section {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--baby-blue);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 15px;
+            font-weight: 700;
+            margin-top: 20px;
+            border: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0px rgba(162, 210, 255, 0.6);
+        }
+
+        .empty-msg {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">UniMart 🌸</a>
+        <a href="/" style="text-decoration:none; color:var(--text-dark); font-weight:600;">Continue Shopping</a>
+    </nav>
+
+    <div class="container">
+        <h1>Your Shopping Cart</h1>
+        <div id="cartItems"></div>
+
+        <div id="cartFooter" style="display:none">
+            <div class="total-section">
+                Total: <span id="cartTotal">₹0</span>
+            </div>
+            <button class="checkout-btn" onclick="alert('Checkout functionality coming soon!')">Proceed to
+                Checkout</button>
+        </div>
+    </div>
+
+    <script>
+        const CART_KEY = 'unimart_cart_v1';
+
+        function readCart() {
+            try { return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }
+            catch { return []; }
+        }
+
+        function writeCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            render();
+        }
+
+        function render() {
+            const cart = readCart();
+            const container = document.getElementById('cartItems');
+            const footer = document.getElementById('cartFooter');
+
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="empty-msg">Your cart is empty 😔<br><br><a href="/" style="color:#FF7A9A">Go find some cute stuff!</a></div>';
+                footer.style.display = 'none';
+                return;
+            }
+
+            footer.style.display = 'block';
+            let total = 0;
+
+            container.innerHTML = cart.map((item, idx) => {
+                const itemTotal = (item.price || 0) * (item.qty || 1);
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <img src="${item.img || 'https://via.placeholder.com/60'}" alt="Item">
+                        <div class="item-info">
+                            <div class="item-title">${item.title}</div>
+                            <div class="item-price">₹${item.price}</div>
+                        </div>
+                        <div class="qty-controls">
+                            <button class="qty-btn dec" data-idx="${idx}">-</button>
+                            <span>${item.qty || 1}</span>
+                            <button class="qty-btn inc" data-idx="${idx}">+</button>
+                        </div>
+                        <button class="remove-btn remove" data-idx="${idx}">Remove</button>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('cartTotal').textContent = '₹' + total;
+            attachHandlers();
+        }
+
+        function attachHandlers() {
+            document.querySelectorAll('.inc').forEach(b => {
+                b.onclick = () => {
+                    const i = Number(b.dataset.idx);
+                    const cart = readCart();
+                    cart[i].qty = (cart[i].qty || 0) + 1;
+                    writeCart(cart);
+                };
+            });
+
+            document.querySelectorAll('.dec').forEach(b => {
+                b.onclick = () => {
+                    const i = Number(b.dataset.idx);
+                    const cart = readCart();
+                    cart[i].qty = Math.max(1, (cart[i].qty || 1) - 1);
+                    writeCart(cart);
+                };
+            });
+
+            document.querySelectorAll('.remove').forEach(b => {
+                b.onclick = () => {
+                    const i = Number(b.dataset.idx);
+                    const cart = readCart();
+                    cart.splice(i, 1);
+                    writeCart(cart);
+                };
+            });
+        }
+
+        // Initial render
+        render();
+    </script>
+</body>
+
+</html>

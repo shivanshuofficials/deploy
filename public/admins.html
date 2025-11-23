@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard - UniMart</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDF6F0;
+            --soft-pink: #FFC3C3;
+            --mint-green: #C1E1C1;
+            --baby-blue: #A2D2FF;
+            --text-dark: #5D576B;
+            --white: #ffffff;
+            --sidebar-width: 300px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--white);
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            margin-left: 20px;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .dashboard {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 15px;
+            border-bottom: 1px solid #f5f5f5;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-item:hover,
+        .chat-item.active {
+            background: #f8f9fa;
+        }
+
+        .chat-item.active {
+            border-left: 4px solid #667eea;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+
+        .chat-preview {
+            font-size: 0.85rem;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            background: #ff6b6b;
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--white);
+        }
+
+        .chat-header-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .chat-header-info p {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            position: relative;
+            word-wrap: break-word;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: var(--white);
+            border: 1px solid #eee;
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            opacity: 0.7;
+            text-align: right;
+        }
+
+        .reply-section {
+            padding: 15px;
+            background: var(--white);
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .reply-section input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .reply-section input:focus {
+            border-color: #667eea;
+        }
+
+        .btn-send {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-send:hover {
+            background: #5a6fd6;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 1.1rem;
+        }
+
+        .status-badge {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">UniMart Seller Panel</a>
+        <div class="nav-links">
+            <a href="/">View Shop</a>
+            <a href="/sell.html">Sell Item</a>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                Recent Messages
+            </div>
+            <div class="chat-list" id="chatList">
+                <div style="padding:20px; text-align:center; color:#999">Loading...</div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                Select a conversation to start chatting
+            </div>
+
+            <!-- Chat Interface (Hidden initially) -->
+            <section id="chatInterface" style="display: none; height: 100%; flex-direction: column;">
+                <div class="chat-header">
+                    <div class="avatar" id="currentAvatar">U</div>
+                    <div class="chat-header-info">
+                        <h3 id="currentChatName">User</h3>
+                        <p id="currentChatStatus">Online</p>
+                    </div>
+                </div>
+
+                <div class="messages-container" id="messages">
+                    <!-- Messages will be inserted here -->
+                </div>
+
+                <div class="reply-section">
+                    <input id="replyInput" type="text" placeholder="Type a message..." maxlength="1000">
+                    <button id="sendBtn" class="btn-send">Send</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="statusBanner" class="status-badge"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+        import { chatAPI, authAPI } from './js/api.js';
+        import { requireAuth, getAuthToken, getCurrentUser } from './js/auth.js';
+
+        // Check authentication
+        requireAuth();
+        const user = getCurrentUser();
+
+        // State
+        let currentChatUserId = null;
+        let socket = null;
+
+        // UI Elements
+        const chatListEl = document.getElementById('chatList');
+        const emptyStateEl = document.getElementById('emptyState');
+        const chatInterfaceEl = document.getElementById('chatInterface');
+        const messagesEl = document.getElementById('messages');
+        const replyInput = document.getElementById('replyInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const currentChatNameEl = document.getElementById('currentChatName');
+        const currentAvatarEl = document.getElementById('currentAvatar');
+
+        // Initialize Socket.IO
+        function initSocket() {
+            const token = getAuthToken();
+            socket = io({
+                auth: { token }
+            });
+
+            socket.on('connect', () => {
+                console.log('Connected to chat server');
+            });
+
+            socket.on('new-message', (msg) => {
+                // If message belongs to current open chat, append it
+                if (currentChatUserId && (msg.sender === currentChatUserId || msg.receiver === currentChatUserId)) {
+                    appendMessage(msg);
+                    scrollToBottom();
+
+                    // Mark as read if we are the receiver
+                    if (msg.receiver === user.id) {
+                        chatAPI.markAsRead(msg.id);
+                        socket.emit('mark-read', { senderId: msg.sender });
+                    }
+                }
+
+                // Refresh conversation list to update preview/unread count
+                loadConversations();
+            });
+
+            socket.on('error', (err) => {
+                console.error('Socket error:', err);
+            });
+        }
+
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const response = await chatAPI.getConversations();
+                if (response.success) {
+                    renderChatList(response.conversations);
+                }
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+            }
+        }
+
+        // Render chat list
+        function renderChatList(conversations) {
+            if (conversations.length === 0) {
+                chatListEl.innerHTML = '<div style="padding:20px; text-align:center; color:#999">No messages yet</div>';
+                return;
+            }
+
+            chatListEl.innerHTML = conversations.map(conv => `
+        <div class="chat-item ${currentChatUserId === conv.userId ? 'active' : ''}" onclick="window.selectChat('${conv.userId}', '${conv.username}')">
+          <div class="avatar" style="background: ${getColor(conv.username)}">${conv.username.charAt(0).toUpperCase()}</div>
+          <div class="chat-info">
+            <div class="chat-name">${conv.username}</div>
+            <div class="chat-preview" style="${conv.unreadCount > 0 ? 'font-weight:bold; color:#333' : ''}">
+              ${conv.lastMessage.sender === user.id ? 'You: ' : ''}${conv.lastMessage.message}
+            </div>
+          </div>
+          ${conv.unreadCount > 0 ? `<div class="unread-badge">${conv.unreadCount}</div>` : ''}
+        </div>
+      `).join('');
+        }
+
+        // Select a chat
+        window.selectChat = async (userId, username) => {
+            currentChatUserId = userId;
+
+            // Update UI
+            emptyStateEl.style.display = 'none';
+            chatInterfaceEl.style.display = 'flex';
+            currentChatNameEl.textContent = username;
+            currentAvatarEl.textContent = username.charAt(0).toUpperCase();
+            currentAvatarEl.style.background = getColor(username);
+
+            // Update active state in list
+            document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
+            // We'll re-render list after loading messages to update unread count
+
+            // Load messages
+            loadMessages(userId);
+        };
+
+        // Load messages for a user
+        async function loadMessages(userId) {
+            messagesEl.innerHTML = '<div style="padding:20px; text-align:center;">Loading...</div>';
+
+            try {
+                const response = await chatAPI.getMessages(userId);
+
+                if (response.success) {
+                    renderMessages(response.messages);
+                    scrollToBottom();
+
+                    // Notify server we read messages
+                    socket.emit('mark-read', { senderId: userId });
+
+                    // Refresh list to clear unread badge
+                    loadConversations();
+                }
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                messagesEl.innerHTML = '<div style="padding:20px; text-align:center; color:red">Error loading messages</div>';
+            }
+        }
+
+        // Render messages
+        function renderMessages(messages) {
+            if (messages.length === 0) {
+                messagesEl.innerHTML = '<div style="padding:20px; text-align:center; color:#999">No messages yet. Say hi!</div>';
+                return;
+            }
+
+            messagesEl.innerHTML = messages.map(msg => {
+                const isSent = msg.sender === user.id;
+                return `
+          <div class="message ${isSent ? 'sent' : 'received'}">
+            ${msg.message}
+            <div class="message-time">
+              ${new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        // Append a single message
+        function appendMessage(msg) {
+            const isSent = msg.sender === user.id;
+            const div = document.createElement('div');
+            div.className = `message ${isSent ? 'sent' : 'received'}`;
+            div.innerHTML = `
+        ${msg.message}
+        <div class="message-time">
+          ${new Date(msg.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      `;
+            messagesEl.appendChild(div);
+        }
+
+        // Send message
+        async function sendMessage() {
+            const text = replyInput.value.trim();
+            if (!text || !currentChatUserId) return;
+
+            // Clear input immediately
+            replyInput.value = '';
+
+            // Emit via socket for real-time
+            socket.emit('send-message', {
+                receiverId: currentChatUserId,
+                message: text
+            });
+
+            // Optimistically append
+            appendMessage({
+                sender: user.id,
+                message: text,
+                timestamp: new Date()
+            });
+            scrollToBottom();
+        }
+
+        // Event Listeners
+        sendBtn.addEventListener('click', sendMessage);
+        replyInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        function scrollToBottom() {
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        function getColor(string) {
+            const colors = ['#FF92A4', '#667eea', '#4A7c59', '#FFC3C3', '#A2D2FF'];
+            let hash = 0;
+            for (let i = 0; i < string.length; i++) {
+                hash = string.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        // Init
+        initSocket();
+        loadConversations();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - UniMart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDF6F0;
+            --soft-pink: #FFC3C3;
+            --mint-green: #C1E1C1;
+            --baby-blue: #A2D2FF;
+            --text-dark: #5D576B;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #FFE5E5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 8px 8px 0px var(--mint-green);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2.5rem;
+            color: #FF92A4;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--baby-blue);
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: 0.3s;
+            background: var(--bg-cream);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--mint-green);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--mint-green);
+            color: #4A7c59;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #a8d1a8;
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .error {
+            background: #ffe0e0;
+            color: #c00;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-dark);
+        }
+
+        .link a {
+            color: #FF92A4;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">UniMart 🌸</div>
+        <p class="subtitle">Join our campus marketplace!</p>
+
+        <div id="errorMessage" class="error"></div>
+
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required minlength="3" maxlength="30">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">Create Account</button>
+        </form>
+
+        <div class="link">
+            Already have an account? <a href="/login.html">Login</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authAPI } from './js/api.js';
+        import { setAuthToken, setUserData, redirectIfAuthenticated } from './js/auth.js';
+
+        // Redirect if already logged in
+        redirectIfAuthenticated('/');
+
+        const form = document.getElementById('signupForm');
+        const errorDiv = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+        }
+
+        function hideError() {
+            errorDiv.classList.remove('show');
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (!username || !email || !password || !confirmPassword) {
+                showError('Please fill in all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating account...';
+
+            try {
+                const response = await authAPI.signup({ username, email, password });
+
+                if (response.success) {
+                    setAuthToken(response.token);
+                    setUserData(response.user);
+                    window.location.href = '/';
+                } else {
+                    showError(response.message || 'Signup failed');
+                }
+            } catch (error) {
+                showError(error.message || 'Signup failed. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Item - UniMart</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FDF6F0;
+            --soft-pink: #FFC3C3;
+            --mint-green: #C1E1C1;
+            --baby-blue: #A2D2FF;
+            --text-dark: #5D576B;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--white);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--mint-green);
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.5rem;
+            color: #4A7c59;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: var(--white);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 8px 8px 0px var(--mint-green);
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            color: #4A7c59;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--mint-green);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: var(--mint-green);
+            color: #4A7c59;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background: #a8d1a8;
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+            text-decoration: none;
+        }
+
+        .error {
+            background: #ffe0e0;
+            color: #c00;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <a href="/" class="logo">UniMart 🌸</a>
+    </nav>
+
+    <div class="container">
+        <h1>✨ Sell an Item</h1>
+
+        <div id="errorMessage" class="error"></div>
+
+        <form id="sellForm">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" placeholder="e.g. Engineering Mathematics 1" required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>Price (₹)</label>
+                <input type="number" name="price" placeholder="250" required min="0">
+            </div>
+
+            <div class="form-group">
+                <label>Image URL</label>
+                <input type="url" name="image_url" placeholder="https://example.com/image.jpg">
+                <small style="color:#888; display:block; margin-top:5px;">Paste a direct link to an image
+                    (optional)</small>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" rows="4" placeholder="Condition, details, etc..."
+                    maxlength="1000"></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">List Item</button>
+        </form>
+
+        <a href="/" class="back-link">Cancel</a>
+    </div>
+
+    <script type="module">
+        import { productsAPI } from './js/api.js';
+        import { requireAuth } from './js/auth.js';
+
+        // Check authentication
+        requireAuth();
+
+        const form = document.getElementById('sellForm');
+        const errorDiv = document.getElementById('errorMessage');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorDiv.style.display = 'none';
+
+            const formData = new FormData(form);
+            const productData = {
+                title: formData.get('title'),
+                price: parseFloat(formData.get('price')),
+                image_url: formData.get('image_url'),
+                description: formData.get('description')
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Listing...';
+
+            try {
+                const response = await productsAPI.create(productData);
+
+                if (response.success) {
+                    alert('Item listed successfully!');
+                    window.location.href = '/';
+                } else {
+                    showError(response.message || 'Failed to list item');
+                }
+            } catch (error) {
+                showError(error.message || 'Error listing item');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'List Item';
+            }
+        });
+    </script>
+</body>
+
+</html>

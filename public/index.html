@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniMart - Pastel Edition</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="chat.css" />
+    <style>
+        :root {
+            --bg-cream: #FDF6F0;
+            --soft-pink: #FFC3C3;
+            --mint-green: #C1E1C1;
+            --baby-blue: #A2D2FF;
+            --text-dark: #5D576B;
+            --white: #ffffff;
+            --shadow: 4px 4px 0px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid var(--baby-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.8rem;
+            color: #FF92A4;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+            width: 35%;
+        }
+
+        .search-bar {
+            width: 100%;
+            background: var(--bg-cream);
+            border: 2px solid var(--soft-pink);
+            border-radius: 25px;
+            padding: 10px 45px 10px 20px;
+            outline: none;
+            color: var(--text-dark);
+            transition: 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .search-bar:focus {
+            border-color: var(--baby-blue);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-45%);
+            width: 18px;
+            height: 18px;
+            fill: var(--text-dark);
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Nav Buttons Group */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Wishlist Link */
+        .wishlist-link {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .wishlist-link:hover {
+            color: #FF92A4;
+        }
+
+        .wishlist-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-login {
+            background: var(--soft-pink);
+            color: #8e4d4d;
+            padding: 8px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: 2px solid white;
+            box-shadow: 0 4px 0px rgba(255, 183, 178, 0.6);
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px rgba(255, 183, 178, 0.6);
+        }
+
+        .btn-sell {
+            background: var(--mint-green);
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #4A7c59;
+            font-weight: 700;
+            border: 2px solid white;
+            box-shadow: 0 4px 0px rgba(171, 209, 171, 0.6);
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-sell:hover {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px rgba(171, 209, 171, 0.6);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: linear-gradient(180deg, #fff 0%, var(--bg-cream) 100%);
+        }
+
+        .hero h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 3rem;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #888;
+            margin-bottom: 2rem;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .pill {
+            background: var(--white);
+            padding: 8px 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            border: 2px solid var(--baby-blue);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pill:hover {
+            background: var(--baby-blue);
+            color: white;
+        }
+
+        /* --- GRID --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 20px 80px 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+            transition: 0.3s;
+            animation: fadeIn 0.5s ease-in;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 8px 8px 0px var(--soft-pink);
+        }
+
+        .img-frame {
+            padding: 15px;
+            background: #FFF0F3;
+        }
+
+        .img-box {
+            height: 180px;
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 15px 20px 20px 20px;
+        }
+
+        .price-badge {
+            background: var(--baby-blue);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .seller {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--soft-pink);
+            color: #8e4d4d;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #ffb1b1;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cart-counter {
+            position: relative;
+            display: inline-block
+        }
+
+        .cart-counter .count {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: #FF6363;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            font-weight: 700
+        }
+
+        /* footer */
+        footer {
+            margin-top: auto;
+            background: #fff;
+            border-top: 1px solid #eee;
+            padding: 30px 5%;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap
+        }
+
+        .footer-col {
+            flex: 1;
+            min-width: 200px
+        }
+
+        .footer-brand {
+            font-family: 'Fredoka';
+            font-size: 1.35rem;
+            color: #FF7A9A;
+            margin-bottom: 6px
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .footer-links a {
+            color: var(--text-dark);
+            text-decoration: none
+        }
+
+        .socials {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px
+        }
+
+        .small {
+            font-size: .9rem;
+            color: #777;
+
+            .hero p {
+                font-size: 1.1rem;
+                color: #888;
+                margin-bottom: 2rem;
+            }
+
+            .categories {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .pill {
+                background: var(--white);
+                padding: 8px 20px;
+                border-radius: 15px;
+                font-weight: 600;
+                border: 2px solid var(--baby-blue);
+                color: var(--text-dark);
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .pill:hover {
+                background: var(--baby-blue);
+                color: white;
+            }
+
+            /* --- GRID --- */
+            .container {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 20px 20px 80px 20px;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+                gap: 30px;
+            }
+
+            .card {
+                background: var(--white);
+                border-radius: 25px;
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                border: 1px solid #eee;
+                transition: 0.3s;
+                animation: fadeIn 0.5s ease-in;
+                cursor: pointer;
+            }
+
+            .card:hover {
+                transform: translateY(-8px);
+                box-shadow: 8px 8px 0px var(--soft-pink);
+            }
+
+            .img-frame {
+                padding: 15px;
+                background: #FFF0F3;
+            }
+
+            .img-box {
+                height: 180px;
+                width: 100%;
+                border-radius: 15px;
+                overflow: hidden;
+            }
+
+            .img-box img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .card-body {
+                padding: 15px 20px 20px 20px;
+            }
+
+            .price-badge {
+                background: var(--baby-blue);
+                color: white;
+                padding: 5px 12px;
+                border-radius: 10px;
+                font-size: 0.9rem;
+                font-weight: 700;
+                display: inline-block;
+                margin-bottom: 8px;
+            }
+
+            .title {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--text-dark);
+                margin-bottom: 5px;
+            }
+
+            .seller {
+                font-size: 0.85rem;
+                color: #999;
+                margin-bottom: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+                padding: 12px;
+                background: var(--soft-pink);
+                color: #8e4d4d;
+                border: none;
+                border-radius: 15px;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .action-btn:hover {
+                background: #ffb1b1;
+                color: white;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .cart-counter {
+                position: relative;
+                display: inline-block
+            }
+
+            .cart-counter .count {
+                position: absolute;
+                top: -8px;
+                right: -10px;
+                background: #FF6363;
+                color: white;
+                border-radius: 50%;
+                padding: 2px 7px;
+                font-size: 12px;
+                font-weight: 700
+            }
+
+            /* footer */
+            footer {
+                margin-top: auto;
+                background: #fff;
+                border-top: 1px solid #eee;
+                padding: 30px 5%;
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+                flex-wrap: wrap
+            }
+
+            .footer-col {
+                flex: 1;
+                min-width: 200px
+            }
+
+            .footer-brand {
+                font-family: 'Fredoka';
+                font-size: 1.35rem;
+                color: #FF7A9A;
+                margin-bottom: 6px
+            }
+
+            .footer-links {
+                display: flex;
+                flex-direction: column;
+                gap: 8px
+            }
+
+            .footer-links a {
+                color: var(--text-dark);
+                text-decoration: none
+            }
+
+            .socials {
+                display: flex;
+                gap: 12px;
+                margin-top: 10px
+            }
+
+            .small {
+                font-size: .9rem;
+                color: #777;
+                margin-top: 10px
+            }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/" class="logo">UniMart 🌸</a>
+
+        <div class="search-box">
+            <input id="searchInput" type="text" class="search-bar" placeholder="Search cute stationery...">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path
+                    d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM11 18a7 7 0 1 1 7-7 7 7 0 0 1-7 7z" />
+            </svg>
+        </div>
+
+        <div class="nav-actions">
+            <a href="#" class="wishlist-link">
+                <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path
+                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
+                Wishlist
+            </a>
+
+            <!-- Login/Signup Button (Visible when NOT logged in) -->
+            <a href="/login.html" id="loginBtn" class="btn-login" style="display:none;">
+                Login / Signup
+            </a>
+
+            <!-- User Info and Logout (Visible when logged in) -->
+            <div id="userSection" style="display:flex; align-items:center; gap:12px; display:none;">
+                <span id="usernameDisplay" style="color: var(--text-dark); font-weight:600;">👤 User</span>
+                <button id="logoutBtn" class="btn-login" style="background: #ffc3c3;">Logout</button>
+            </div>
+
+            <a href="/admins.html" class="btn-sell" style="background: #667eea;">💬 My Messages</a>
+
+            <a href="/sell.html" class="btn-sell">✨ Sell Item</a>
+
+            <!-- CART ICON (persistent) -->
+            <a id="cartBtn" href="/cart.html" class="cart-counter" title="View cart"
+                style="margin-left:6px; text-decoration:none; color:inherit;">
+                🛒 <span class="count" id="cartCount" style="display:none">0</span>
+            </a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>Your Campus Store</h1>
+        <p>Buy books, notes & cute stuff from seniors!</p>
+
+        <div class="categories">
+            <span class="pill">📚 Books</span>
+            <span class="pill">🎀 Accessories</span>
+            <span class="pill">🖊️ Stationery</span>
+            <span class="pill">🎒 Bags</span>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="grid" id="productGrid">
+            <!-- Products will be loaded here -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px;">Loading products...</div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-col">
+            <div class="footer-brand">UniMart 🌸</div>
+            <div class="small">Campus marketplace for books, stationery & more.<br />Made with ❤️ by students.</div>
+            <div class="socials" aria-hidden="true">
+                <a href="#" title="Instagram">IG</a>
+                <a href="#" title="Twitter">TW</a>
+                <a href="#" title="Facebook">FB</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <div style="font-weight:700;margin-bottom:8px">Helpful</div>
+            <div class="footer-links">
+                <a href="#">Contact</a>
+                <a href="#">How it works</a>
+                <a href="#">Shipping & Returns</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <div style="font-weight:700;margin-bottom:8px">Community</div>
+            <div class="footer-links">
+                <a href="#">Campus Ambassadors</a>
+                <a href="#">Sell on UniMart</a>
+                <a href="#">Safety Tips</a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <div style="font-weight:700;margin-bottom:8px">Download</div>
+            <div class="small">Get the app (coming soon)</div>
+        </div>
+    </footer>
+
+    <!-- Chat Widget Root -->
+    <div id="chat-root" aria-live="polite"></div>
+
+    <script type="module">
+        import { productsAPI, authAPI } from './js/api.js';
+        import { requireAuth, getCurrentUser, logout } from './js/auth.js';
+
+        // Check authentication (Optional for home page)
+        // requireAuth(); // Commented out to allow public access
+
+        const user = getCurrentUser();
+
+        if (user) {
+            // User is logged in
+            document.getElementById('userSection').style.display = 'flex';
+            document.getElementById('usernameDisplay').textContent = `👤 ${user.username}`;
+            document.getElementById('loginBtn').style.display = 'none';
+        } else {
+            // User is NOT logged in
+            document.getElementById('userSection').style.display = 'none';
+            document.getElementById('loginBtn').style.display = 'flex';
+        }
+
+        // Logout handler
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            logout();
+        });
+
+        // Load products
+        async function loadProducts(search = '') {
+            const grid = document.getElementById('productGrid');
+
+            try {
+                const response = await productsAPI.getAll({ search });
+
+                if (!response.success || !response.products.length) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px;">No products found.</div>';
+                    return;
+                }
+
+                grid.innerHTML = response.products.map(product => `
+                    <div class="card" data-id="${product.id}">
+                        <div class="img-frame">
+                            <div class="img-box">
+                                <img src="${product.image_url || 'https://via.placeholder.com/300'}" alt="${product.title}">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <span class="price-badge">₹${product.price}</span>
+                            <div class="title">${product.title}</div>
+                            <div class="seller">From: ${product.seller_name || 'Seller'}</div>
+                            <button class="action-btn" onclick="event.stopPropagation(); window.openChatWidget('${product.seller}', '${product.title.replace(/'/g, "\\'")}', '${user ? user.username : 'Guest'}')">💬 Chat</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add click listeners
+                document.querySelectorAll('.card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        if (e.target.closest('.action-btn')) return;
+                        window.location.href = `/product.html?id=${card.dataset.id}`;
+                    });
+                });
+
+            } catch (error) {
+                console.error('Error loading products:', error);
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: red;">Error loading products. Please try again.</div>';
+            }
+        }
+
+        // Search handler
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                loadProducts(e.target.value);
+            }, 300);
+        });
+
+        // Initial load
+        loadProducts();
+
+        // Cart logic (local storage based)
+        const CART_KEY = 'unimart_cart_v1';
+        function updateCartUI() {
+            try {
+                const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+                const totalQty = cart.reduce((s, i) => s + (i.qty || 0), 0);
+                const countEl = document.getElementById('cartCount');
+                if (totalQty > 0) {
+                    countEl.style.display = 'inline-block';
+                    countEl.textContent = totalQty;
+                } else {
+                    countEl.style.display = 'none';
+                }
+            } catch (e) {
+                console.error('Cart error:', e);
+            }
+        }
+        updateCartUI();
+
+        // Expose user ID for chat
+        if (user) {
+            window.CURRENT_USER_ID = user.id;
+            window.CURRENT_USER_NAME = user.username;
+        }
+    </script>
+
+    <script type="module" src="chat.js"></script>
+</body>
+
+</html>
