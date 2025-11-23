@@ -366,204 +366,8 @@
         .small {
             font-size: .9rem;
             color: #777;
-
-            .hero p {
-                font-size: 1.1rem;
-                color: #888;
-                margin-bottom: 2rem;
-            }
-
-            .categories {
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-                flex-wrap: wrap;
-            }
-
-            .pill {
-                background: var(--white);
-                padding: 8px 20px;
-                border-radius: 15px;
-                font-weight: 600;
-                border: 2px solid var(--baby-blue);
-                color: var(--text-dark);
-                cursor: pointer;
-                transition: 0.2s;
-            }
-
-            .pill:hover {
-                background: var(--baby-blue);
-                color: white;
-            }
-
-            /* --- GRID --- */
-            .container {
-                max-width: 1100px;
-                margin: 0 auto;
-                padding: 20px 20px 80px 20px;
-            }
-
-            .grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-                gap: 30px;
-            }
-
-            .card {
-                background: var(--white);
-                border-radius: 25px;
-                overflow: hidden;
-                box-shadow: var(--shadow);
-                border: 1px solid #eee;
-                transition: 0.3s;
-                animation: fadeIn 0.5s ease-in;
-                cursor: pointer;
-            }
-
-            .card:hover {
-                transform: translateY(-8px);
-                box-shadow: 8px 8px 0px var(--soft-pink);
-            }
-
-            .img-frame {
-                padding: 15px;
-                background: #FFF0F3;
-            }
-
-            .img-box {
-                height: 180px;
-                width: 100%;
-                border-radius: 15px;
-                overflow: hidden;
-            }
-
-            .img-box img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-            .card-body {
-                padding: 15px 20px 20px 20px;
-            }
-
-            .price-badge {
-                background: var(--baby-blue);
-                color: white;
-                padding: 5px 12px;
-                border-radius: 10px;
-                font-size: 0.9rem;
-                font-weight: 700;
-                display: inline-block;
-                margin-bottom: 8px;
-            }
-
-            .title {
-                font-size: 1.1rem;
-                font-weight: 700;
-                color: var(--text-dark);
-                margin-bottom: 5px;
-            }
-
-            .seller {
-                font-size: 0.85rem;
-                color: #999;
-                margin-bottom: 15px;
-            }
-
-            .action-btn {
-                width: 100%;
-                padding: 12px;
-                background: var(--soft-pink);
-                color: #8e4d4d;
-                border: none;
-                border-radius: 15px;
-                font-weight: 700;
-                font-size: 1rem;
-                cursor: pointer;
-                transition: 0.2s;
-            }
-
-            .action-btn:hover {
-                background: #ffb1b1;
-                color: white;
-            }
-
-            @keyframes fadeIn {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .cart-counter {
-                position: relative;
-                display: inline-block
-            }
-
-            .cart-counter .count {
-                position: absolute;
-                top: -8px;
-                right: -10px;
-                background: #FF6363;
-                color: white;
-                border-radius: 50%;
-                padding: 2px 7px;
-                font-size: 12px;
-                font-weight: 700
-            }
-
-            /* footer */
-            footer {
-                margin-top: auto;
-                background: #fff;
-                border-top: 1px solid #eee;
-                padding: 30px 5%;
-                display: flex;
-                justify-content: space-between;
-                gap: 20px;
-                flex-wrap: wrap
-            }
-
-            .footer-col {
-                flex: 1;
-                min-width: 200px
-            }
-
-            .footer-brand {
-                font-family: 'Fredoka';
-                font-size: 1.35rem;
-                color: #FF7A9A;
-                margin-bottom: 6px
-            }
-
-            .footer-links {
-                display: flex;
-                flex-direction: column;
-                gap: 8px
-            }
-
-            .footer-links a {
-                color: var(--text-dark);
-                text-decoration: none
-            }
-
-            .socials {
-                display: flex;
-                gap: 12px;
-                margin-top: 10px
-            }
-
-            .small {
-                font-size: .9rem;
-                color: #777;
-                margin-top: 10px
-            }
+            margin-top: 10px
+        }
     </style>
 </head>
 
@@ -589,12 +393,12 @@
                 Wishlist
             </a>
 
-            <!-- Login/Signup Button (Visible when NOT logged in) -->
-            <a href="/login.html" id="loginBtn" class="btn-login" style="display:none;">
+            <!-- Login/Signup Button (Visible by default, hidden if logged in) -->
+            <a href="/login.html" id="loginBtn" class="btn-login">
                 Login / Signup
             </a>
 
-            <!-- User Info and Logout (Visible when logged in) -->
+            <!-- User Info and Logout (Hidden by default, visible if logged in) -->
             <div id="userSection" style="display:flex; align-items:center; gap:12px; display:none;">
                 <span id="usernameDisplay" style="color: var(--text-dark); font-weight:600;">👤 User</span>
                 <button id="logoutBtn" class="btn-login" style="background: #ffc3c3;">Logout</button>
@@ -677,6 +481,7 @@
         // requireAuth(); // Commented out to allow public access
 
         const user = getCurrentUser();
+        console.log('Current User:', user);
 
         if (user) {
             // User is logged in
